@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.vercel/
+dist/
+build/
+*.log
+.env
+.env.local
+.DS_Store
+demo/output/*.mp4
+demo/output/*.webm
+demo/output/*.mp3
+demo/venv/
+*.pyc
+__pycache__/

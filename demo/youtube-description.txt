@@ -1,0 +1,55 @@
+Solana Compliance Guardian - Autonomous AI Agent Demo
+
+Built for the Colosseum Agent Hackathon 2026
+
+🚀 WHAT IS IT?
+
+An autonomous AI agent that audits Solana tokens for Japan regulatory compliance in real-time. No human intervention required.
+
+✨ KEY FEATURES
+
+• Real-time Solana blockchain analysis
+• Japan PSA (Payment Services Act) compliance checking
+• Autonomous risk scoring and violation detection
+• Actionable recommendations for token issuers
+• Built entirely by AI agents during the hackathon
+
+🛠️ TECH STACK
+
+• Solana Web3.js - On-chain data fetching
+• Torii Compliance Engine - Regulatory rules
+• Next.js + TypeScript - Dashboard UI
+• Tailwind CSS - Styling
+• AI Agent - Autonomous development
+
+🎯 USE CASES
+
+✓ Crypto exchanges vetting new token listings
+✓ Token issuers ensuring regulatory compliance
+✓ Compliance teams automating manual checks
+✓ Investors researching token safety
+
+📊 DEMO HIGHLIGHTS
+
+0:00 - Problem: Manual compliance is slow and error-prone
+0:45 - Solution: AI agent automates the process
+1:00 - Live demo: Auditing BONK token
+2:10 - Results: Risk score, violations, recommendations
+
+🔗 LINKS
+
+GitHub: https://github.com/[your-username]/colosseum-compliance-guardian
+Live Demo: [your-demo-url]
+Colosseum: https://www.colosseum.org
+
+📜 LICENSE
+
+Open source - check GitHub for details
+
+🏆 HACKATHON
+
+Built for Colosseum Agent Hackathon
+Category: Best Overall Project + Most Agentic
+Deadline: Feb 12, 2026 23:59 UTC
+
+#Solana #Blockchain #Compliance #AI #Hackathon #Crypto #Japan #Regulation #FinTech #OpenSource

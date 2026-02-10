@@ -1,0 +1,19 @@
+{
+  "name": "solana-token-fetcher",
+  "version": "1.0.0",
+  "description": "Solana token data fetcher for Compliance Guardian",
+  "type": "module",
+  "scripts": {
+    "test": "tsx test.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.95.8",
+    "@solana/spl-token": "^0.4.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "tsx": "^4.19.2"
+  }
+}
