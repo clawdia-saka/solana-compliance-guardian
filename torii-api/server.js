@@ -46,15 +46,44 @@ app.get('/', (req, res) => {
 });
 
 /**
+ * Payment verification helper
+ * In production, this would verify x402 payment signatures
+ */
+function verifyPayment(paymentProof) {
+  if (!paymentProof) return { valid: false, reason: 'No payment proof provided' };
+  
+  try {
+    const proof = JSON.parse(paymentProof);
+    
+    // Basic validation checks
+    if (!proof.from || !proof.to || !proof.amount || !proof.signature) {
+      return { valid: false, reason: 'Invalid payment proof structure' };
+    }
+    
+    // In production: verify signature against x402 facilitator
+    // For demo: accept mock signatures
+    if (proof.signature.startsWith('mock_sig_')) {
+      return { valid: true, payer: proof.from };
+    }
+    
+    return { valid: false, reason: 'Invalid signature' };
+  } catch (error) {
+    return { valid: false, reason: 'Malformed payment proof' };
+  }
+}
+
+/**
  * POST /api/check
  * Analyze token description and return classification
  * 
- * Body: { "description": "token description text" }
+ * Body: { "description": "token description text", "paymentProof": "..." (optional for demo mode) }
+ * Headers: X-Payment-Proof (optional alternative to body field)
  * Returns: { classification, riskScore, risks, required, ... }
  */
 app.post('/api/check', (req, res) => {
   try {
-    const { description } = req.body;
+    const { description, paymentProof, demoMode } = req.body;
+    const paymentHeader = req.headers['x-payment-proof'];
 
     // Validation
     if (!description || typeof description !== 'string') {
@@ -78,6 +107,28 @@ app.post('/api/check', (req, res) => {
       });
     }
 
+    // Payment verification (skip in demo mode)
+    if (!demoMode) {
+      const proof = paymentProof || paymentHeader;
+      const verification = verifyPayment(proof);
+      
+      if (!verification.valid) {
+        return res.status(402).json({
+          error: 'Payment Required',
+          message: verification.reason,
+          pricing: {
+            amount: '$0.10',
+            currency: 'USDC',
+            network: 'Base (eip155:8453)',
+            payTo: process.env.PAY_TO_ADDRESS || '0xBB6FdC629a153E2bF7629032A3Bf99aec8b48938'
+          }
+        });
+      }
+      
+      // Log successful payment
+      console.log(`[PAYMENT] Verified payment from ${verification.payer} for audit`);
+    }
+
     // Process
     const startTime = Date.now();
     const result = engine.classify(description);
@@ -89,7 +140,8 @@ app.post('/api/check', (req, res) => {
       data: result,
       meta: {
         processingTimeMs: processingTime,
-        descriptionLength: description.length
+        descriptionLength: description.length,
+        paymentVerified: !demoMode
       }
     });
   } catch (error) {

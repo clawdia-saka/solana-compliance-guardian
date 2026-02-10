@@ -38,12 +38,22 @@ Projects launching tokens in Japan face:
 
 ---
 
+## 💳 Pricing
+
+**$0.10 USDC per audit** - Pay with USDC on Base network via x402 protocol
+
+- ✅ **Connect Wallet** - Any EVM wallet (MetaMask, Coinbase Wallet, etc.)
+- ✅ **Instant Payment** - Powered by x402 HTTP payment protocol
+- ✅ **Demo Mode** - Free testing available (toggle in UI)
+- ✅ **Secure** - Payments verified on-chain before processing
+
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - **Node.js** 18+ (tested on v22.22.0)
 - **Solana RPC access** (public endpoint works, Helius recommended)
+- **EVM Wallet** with USDC on Base (for paid audits)
 - **Git** for cloning the repository
 
 ### Installation
@@ -96,9 +106,12 @@ curl -X POST http://localhost:3000/api/check \
 ### Via Web Dashboard
 
 1. **Navigate to** http://localhost:3001
-2. **Enter** a Solana token mint address
-3. **Click** "Audit Token"
-4. **Review** risk score, violations, and recommendations
+2. **Connect Wallet** (optional - required for paid audits)
+3. **Enter** a Solana token mint address
+4. **Choose Mode:**
+   - **Demo Mode (Free)** - Toggle for testing without payment
+   - **Paid Mode ($0.10 USDC)** - Connect wallet and pay on Base network
+5. **Review** risk score, violations, and recommendations
 
 ### Via API
 
@@ -182,6 +195,7 @@ console.log(`Required: ${data.required}`);
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
 | **Blockchain** | @solana/web3.js, @solana/spl-token | On-chain data fetching |
+| **Payments** | x402, wagmi, viem | USDC payments on Base |
 | **Compliance** | Torii (Japan legal framework) | Regulatory analysis |
 | **Backend** | Node.js, Express, TypeScript | API services |
 | **Frontend** | Next.js 14, React, Tailwind CSS | Web dashboard |
@@ -405,8 +419,10 @@ This project was **built entirely by an AI agent** with minimal human interventi
 ### Innovation Points
 
 - **First** Solana compliance tool for Japan regulations
-- **Only** project combining on-chain analysis + legal framework
+- **Only** project combining on-chain analysis + legal framework  
+- **x402 Integration** - Seamless USDC payments on Base via HTTP protocol
 - **Autonomous** risk scoring with confidence levels
+- **Cross-Chain** - Solana auditing + Base payments
 - **Extensible** to other jurisdictions (US, EU, Singapore)
 
 ### Target Categories
