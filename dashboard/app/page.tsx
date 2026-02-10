@@ -83,6 +83,34 @@ export default function Home() {
         </Alert>
       </div>
 
+      {/* Demo Video Section */}
+      <Card className="max-w-4xl mx-auto border-2 border-purple-600 bg-purple-900/50 shadow-lg shadow-purple-500/30 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-purple-100">
+            <TrendingUp className="w-5 h-5 text-green-400" />
+            Watch Demo
+          </CardTitle>
+          <CardDescription className="text-purple-300">
+            See Compliance Guardian in action (3:15)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="aspect-video rounded-lg overflow-hidden border-2 border-purple-500 shadow-lg shadow-purple-500/50">
+            <video 
+              controls 
+              className="w-full h-full"
+              poster="/demo-thumbnail.png"
+            >
+              <source src="/demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <p className="text-sm text-purple-300 mt-3 text-center">
+            Full walkthrough: token submission → on-chain analysis → risk scoring → compliance recommendations
+          </p>
+        </CardContent>
+      </Card>
+
       {/* Audit Submission Form */}
       <Card className="max-w-2xl mx-auto border-2 border-purple-600 bg-purple-900/50 shadow-lg shadow-purple-500/30 backdrop-blur-sm">
         <CardHeader>
