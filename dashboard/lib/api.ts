@@ -53,9 +53,15 @@ const mockAudits: AuditResult[] = [
   }
 ];
 
-export async function submitAudit(tokenAddress: string): Promise<AuditResult> {
+export async function submitAudit(tokenAddress: string, paymentProof?: string): Promise<AuditResult> {
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // In production, verify payment with backend API
+  if (paymentProof) {
+    console.log('Payment verified:', JSON.parse(paymentProof));
+    // Backend would verify the payment here
+  }
   
   // Simulate BONK token audit results
   const newAudit: AuditResult = {

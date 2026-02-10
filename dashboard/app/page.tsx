@@ -1,25 +1,34 @@
 'use client';
 
 import { useState } from 'react';
+import { useAccount } from 'wagmi';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Shield, Search, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
+import { Shield, Search, AlertTriangle, CheckCircle, TrendingUp, DollarSign } from 'lucide-react';
 import { submitAudit, getAudits } from '@/lib/api';
 import { AuditResult } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { StatusBadge } from '@/components/status-badge';
 import { RiskScore } from '@/components/risk-score';
+import { PaymentModal } from '@/components/payment-modal';
 import Link from 'next/link';
+import { getX402Config } from '@/lib/x402-config';
 
 export default function Home() {
   const router = useRouter();
+  const { isConnected } = useAccount();
+  const config = getX402Config();
+  
   const [tokenAddress, setTokenAddress] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [recentAudits, setRecentAudits] = useState<AuditResult[]>([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [pendingToken, setPendingToken] = useState('');
+  const [demoMode, setDemoMode] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,14 +46,36 @@ export default function Home() {
       return;
     }
 
+    // Check if demo mode or payment required
+    if (demoMode) {
+      // Skip payment in demo mode
+      submitAuditDirect(tokenAddress.trim());
+    } else {
+      // Show payment modal
+      setPendingToken(tokenAddress.trim());
+      setShowPaymentModal(true);
+    }
+  };
+
+  const handlePaymentComplete = async (paymentProof: string) => {
+    console.log('Payment completed:', paymentProof);
+    setShowPaymentModal(false);
+    
+    // Submit audit with payment proof
+    submitAuditDirect(pendingToken, paymentProof);
+  };
+
+  const submitAuditDirect = async (address: string, paymentProof?: string) => {
     setLoading(true);
+    setError('');
     try {
-      const result = await submitAudit(tokenAddress.trim());
+      const result = await submitAudit(address, paymentProof);
       router.push(`/audit/${result.id}`);
     } catch {
       setError('Failed to submit audit. Please try again.');
     } finally {
       setLoading(false);
+      setPendingToken('');
     }
   };
 
@@ -119,11 +150,32 @@ export default function Home() {
             Submit Token for Audit
           </CardTitle>
           <CardDescription className="text-purple-300">
-            Enter a Solana token address to begin compliance analysis
+            Enter a Solana token address to begin compliance analysis • {config.AUDIT_PRICE} USDC per audit
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Payment Mode Toggle */}
+            <div className="flex items-center justify-between p-3 bg-purple-950/50 border border-purple-600 rounded-lg">
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4 text-green-400" />
+                <span className="text-sm text-purple-200">Demo Mode (Free)</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDemoMode(!demoMode)}
+                className={`relative w-12 h-6 rounded-full transition-colors ${
+                  demoMode ? 'bg-green-600' : 'bg-gray-600'
+                }`}
+              >
+                <span
+                  className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                    demoMode ? 'left-7' : 'left-1'
+                  }`}
+                />
+              </button>
+            </div>
+
             <div className="space-y-2">
               <Input
                 type="text"
@@ -140,26 +192,52 @@ export default function Home() {
                 </Alert>
               )}
             </div>
+
+            {/* Payment Info */}
+            {!demoMode && (
+              <Alert className="border-green-600 bg-green-900/20">
+                <DollarSign className="h-4 w-4 text-green-400" />
+                <AlertDescription className="text-green-200">
+                  {isConnected 
+                    ? `Payment of ${config.AUDIT_PRICE} USDC will be requested on Base network`
+                    : 'Connect wallet to pay for audit with USDC on Base'}
+                </AlertDescription>
+              </Alert>
+            )}
+
             <Button 
               type="submit" 
               className="w-full bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 hover:from-purple-700 hover:via-violet-700 hover:to-purple-800 solana-glow transition-all"
-              disabled={loading}
+              disabled={loading || (!demoMode && !isConnected)}
             >
               {loading ? (
                 <>
                   <Skeleton className="w-4 h-4 mr-2" />
                   Submitting...
                 </>
-              ) : (
+              ) : demoMode ? (
                 <>
                   <Shield className="w-4 h-4 mr-2" />
-                  Start Audit
+                  Start Free Demo Audit
+                </>
+              ) : (
+                <>
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  Pay {config.AUDIT_PRICE} & Start Audit
                 </>
               )}
             </Button>
           </form>
         </CardContent>
       </Card>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        onPaymentComplete={handlePaymentComplete}
+        tokenAddress={pendingToken}
+      />
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
