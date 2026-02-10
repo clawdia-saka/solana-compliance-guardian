@@ -40,12 +40,13 @@ Projects launching tokens in Japan face:
 
 ## 💳 Pricing
 
-**$0.01 USDC per audit** - Pay with USDC on Base network via x402 protocol
+**$0.01 USDC per audit** - Pay with USDC on Solana via x402-solana protocol
 
-- ✅ **Connect Wallet** - Any EVM wallet (MetaMask, Coinbase Wallet, etc.)
-- ✅ **Instant Payment** - Powered by x402 HTTP payment protocol
+- ✅ **Connect Wallet** - Phantom, Solflare, or any Solana wallet
+- ✅ **Instant Payment** - Powered by x402-solana HTTP payment protocol
 - ✅ **Demo Mode** - Free testing available (toggle in UI)
 - ✅ **Secure** - Payments verified on-chain before processing
+- ⚡ **Fast & Cheap** - Solana's sub-second finality and low fees
 
 ## 🚀 Quick Start
 
@@ -53,7 +54,7 @@ Projects launching tokens in Japan face:
 
 - **Node.js** 18+ (tested on v22.22.0)
 - **Solana RPC access** (public endpoint works, Helius recommended)
-- **EVM Wallet** with USDC on Base (for paid audits)
+- **Solana Wallet** with USDC (Phantom/Solflare recommended, for paid audits)
 - **Git** for cloning the repository
 
 ### Installation
@@ -110,7 +111,7 @@ curl -X POST http://localhost:3000/api/check \
 3. **Enter** a Solana token mint address
 4. **Choose Mode:**
    - **Demo Mode (Free)** - Toggle for testing without payment
-   - **Paid Mode ($0.01 USDC)** - Connect wallet and pay on Base network
+   - **Paid Mode ($0.01 USDC)** - Connect Solana wallet and pay on Solana
 5. **Review** risk score, violations, and recommendations
 
 ### Via API
@@ -195,7 +196,7 @@ console.log(`Required: ${data.required}`);
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
 | **Blockchain** | @solana/web3.js, @solana/spl-token | On-chain data fetching |
-| **Payments** | x402, wagmi, viem | USDC payments on Base |
+| **Payments** | x402-solana, @solana/wallet-adapter | USDC payments on Solana |
 | **Compliance** | Torii (Japan legal framework) | Regulatory analysis |
 | **Backend** | Node.js, Express, TypeScript | API services |
 | **Frontend** | Next.js 14, React, Tailwind CSS | Web dashboard |
@@ -420,9 +421,9 @@ This project was **built entirely by an AI agent** with minimal human interventi
 
 - **First** Solana compliance tool for Japan regulations
 - **Only** project combining on-chain analysis + legal framework  
-- **x402 Integration** - Seamless USDC payments on Base via HTTP protocol
+- **x402 Integration** - Seamless USDC payments on Solana via HTTP protocol
 - **Autonomous** risk scoring with confidence levels
-- **Cross-Chain** - Solana auditing + Base payments
+- **Solana-Native** - Both auditing and payments on Solana blockchain
 - **Extensible** to other jurisdictions (US, EU, Singapore)
 
 ### Target Categories
