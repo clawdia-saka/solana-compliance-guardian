@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { Shield } from "lucide-react";
-import { PaymentProvider } from "@/components/payment-provider";
-import { WalletConnectButton } from "@/components/wallet-connect-button";
+import { SolanaWalletProvider } from "@/components/solana-wallet-provider";
+import { SolanaWalletButton } from "@/components/solana-wallet-button";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <PaymentProvider>
+        <SolanaWalletProvider>
           <div className="min-h-screen bg-gradient-to-br from-purple-900 via-violet-900 to-black">
             <nav className="border-b border-purple-700/50 bg-black/40 backdrop-blur-sm sticky top-0 z-50">
               <div className="container mx-auto px-4 py-4">
@@ -50,7 +50,7 @@ export default function RootLayout({
                     >
                       History
                     </Link>
-                    <WalletConnectButton />
+                    <SolanaWalletButton />
                   </div>
                 </div>
               </div>
@@ -72,11 +72,11 @@ export default function RootLayout({
                 <span className="text-purple-400">•</span>
                 <span className="text-green-400">💳 x402 Payments</span>
               </div>
-              <p className="text-xs text-purple-400">Built with Torii AI • Pay with USDC on Base</p>
+              <p className="text-xs text-purple-400">Built with Torii AI • Pay with USDC on Solana</p>
             </div>
           </footer>
           </div>
-        </PaymentProvider>
+        </SolanaWalletProvider>
       </body>
     </html>
   );

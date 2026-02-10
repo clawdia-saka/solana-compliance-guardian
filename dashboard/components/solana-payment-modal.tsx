@@ -1,88 +1,84 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
-import { formatUnits } from 'viem';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
+import { PublicKey, Transaction, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { getAssociatedTokenAddress, createTransferInstruction, getAccount } from '@solana/spl-token';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { X, Loader2, CheckCircle, AlertTriangle, DollarSign } from 'lucide-react';
-import { getX402Config } from '@/lib/x402-config';
+import { getX402SolanaConfig } from '@/lib/x402-solana-config';
 
-interface PaymentModalProps {
+interface SolanaPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onPaymentComplete: (paymentProof: string) => void;
   tokenAddress: string;
 }
 
-type PaymentStatus = 'idle' | 'checking_balance' | 'approving' | 'paying' | 'success' | 'error';
+type PaymentStatus = 'idle' | 'checking_balance' | 'paying' | 'success' | 'error';
 
-export function PaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress }: PaymentModalProps) {
-  const { address, isConnected } = useAccount();
-  const { data: walletClient } = useWalletClient();
-  const publicClient = usePublicClient();
+export function SolanaPaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress }: SolanaPaymentModalProps) {
+  const { publicKey, signTransaction, connected } = useWallet();
+  const { connection } = useConnection();
   
   const [status, setStatus] = useState<PaymentStatus>('idle');
   const [error, setError] = useState('');
   const [balance, setBalance] = useState<string>('0');
+  const [solBalance, setSolBalance] = useState<string>('0');
   
-  const config = getX402Config();
-  const priceUSD = parseFloat(config.AUDIT_PRICE.replace('$', ''));
+  const config = getX402SolanaConfig();
   
-  // USDC contract addresses
-  const USDC_CONTRACTS = {
-    'eip155:8453': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // Base mainnet
-    'eip155:84532': '0x036CbD53842c5426634e7929541eC2318f3dCF7e', // Base Sepolia
-  } as const;
-
-  const usdcAddress = USDC_CONTRACTS[config.NETWORK as keyof typeof USDC_CONTRACTS];
-
   const checkBalance = useCallback(async () => {
-    if (!publicClient || !address) return;
+    if (!publicKey) return;
     
     setStatus('checking_balance');
     try {
-      // Read USDC balance
-      const balanceOf = await publicClient.readContract({
-        address: usdcAddress as `0x${string}`,
-        abi: [
-          {
-            name: 'balanceOf',
-            type: 'function',
-            stateMutability: 'view',
-            inputs: [{ name: 'account', type: 'address' }],
-            outputs: [{ type: 'uint256' }],
-          },
-        ],
-        functionName: 'balanceOf',
-        args: [address],
-      });
-
-      const formattedBalance = formatUnits(balanceOf as bigint, 6); // USDC has 6 decimals
-      setBalance(formattedBalance);
+      // Check SOL balance
+      const solBalanceLamports = await connection.getBalance(publicKey);
+      const solBalanceSOL = (solBalanceLamports / LAMPORTS_PER_SOL).toFixed(4);
+      setSolBalance(solBalanceSOL);
+      
+      // Check USDC balance
+      try {
+        const usdcMint = new PublicKey(config.USDC_MINT);
+        const tokenAccount = await getAssociatedTokenAddress(
+          usdcMint,
+          publicKey
+        );
+        
+        const accountInfo = await getAccount(connection, tokenAccount);
+        const usdcBalance = Number(accountInfo.amount) / 1_000_000; // USDC has 6 decimals
+        setBalance(usdcBalance.toFixed(2));
+      } catch (err) {
+        console.log('No USDC token account found or error:', err);
+        setBalance('0');
+      }
+      
       setStatus('idle');
     } catch (err) {
       console.error('Balance check error:', err);
       setBalance('0');
+      setSolBalance('0');
       setStatus('idle');
     }
-  }, [publicClient, address, usdcAddress]);
+  }, [connection, publicKey, config.USDC_MINT]);
 
   useEffect(() => {
-    if (isOpen && isConnected && address) {
+    if (isOpen && connected && publicKey) {
       checkBalance();
     }
-  }, [isOpen, isConnected, address, checkBalance]);
+  }, [isOpen, connected, publicKey, checkBalance]);
 
   const handlePayment = async () => {
-    if (!walletClient || !address) {
+    if (!publicKey || !signTransaction) {
       setError('Please connect your wallet first');
       return;
     }
 
-    if (parseFloat(balance) < priceUSD) {
-      setError(`Insufficient USDC balance. You have ${balance} USDC but need ${priceUSD} USDC.`);
+    if (parseFloat(balance) < config.AUDIT_PRICE_USDC) {
+      setError(`Insufficient USDC balance. You have ${balance} USDC but need ${config.AUDIT_PRICE_USDC} USDC.`);
       return;
     }
 
@@ -90,27 +86,60 @@ export function PaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress 
       setStatus('paying');
       setError('');
 
-      // For demo: Generate a mock payment signature
-      // In production, this would use actual x402 SDK to create payment proof
-      const timestamp = Date.now();
-      const paymentData = {
-        from: address,
+      const recipientPublicKey = new PublicKey(config.PAY_TO_ADDRESS);
+      const usdcMint = new PublicKey(config.USDC_MINT);
+      
+      // Get token accounts
+      const fromTokenAccount = await getAssociatedTokenAddress(
+        usdcMint,
+        publicKey
+      );
+      
+      const toTokenAccount = await getAssociatedTokenAddress(
+        usdcMint,
+        recipientPublicKey
+      );
+      
+      // Create transfer instruction
+      const transferInstruction = createTransferInstruction(
+        fromTokenAccount,
+        toTokenAccount,
+        publicKey,
+        config.AUDIT_PRICE_LAMPORTS
+      );
+      
+      // Create transaction
+      const transaction = new Transaction().add(transferInstruction);
+      
+      // Get recent blockhash
+      const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+      
+      // Sign transaction
+      const signedTransaction = await signTransaction(transaction);
+      
+      // Send transaction
+      const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+      
+      // Wait for confirmation
+      await connection.confirmTransaction({
+        signature,
+        blockhash,
+        lastValidBlockHeight,
+      });
+      
+      // Create payment proof
+      const paymentProof = JSON.stringify({
+        signature,
+        from: publicKey.toBase58(),
         to: config.PAY_TO_ADDRESS,
         amount: config.AUDIT_PRICE,
         network: config.NETWORK,
         tokenAddress,
-        timestamp,
-      };
-
-      // Create a simple payment proof (in production, use x402 SDK)
-      const paymentProof = JSON.stringify({
-        ...paymentData,
-        signature: `mock_sig_${timestamp}_${address.slice(2, 10)}`,
+        timestamp: Date.now(),
         scheme: config.SCHEME,
       });
-
-      // Simulate payment delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
 
       setStatus('success');
       
@@ -152,7 +181,7 @@ export function PaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress 
             Audit Payment Required
           </CardTitle>
           <CardDescription className="text-purple-300">
-            Pay with USDC on Base network to unlock audit results
+            Pay with USDC on Solana to unlock audit results
           </CardDescription>
         </CardHeader>
 
@@ -165,24 +194,32 @@ export function PaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress 
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-purple-400">Network:</span>
-              <span className="text-purple-200">{config.IS_TESTNET ? 'Base Sepolia (Testnet)' : 'Base'}</span>
+              <span className="text-purple-200">{config.IS_TESTNET ? 'Solana Devnet' : 'Solana Mainnet'}</span>
             </div>
-            {isConnected && (
-              <div className="flex justify-between items-center text-sm mt-1">
-                <span className="text-purple-400">Your Balance:</span>
-                <span className={`font-mono ${parseFloat(balance) >= priceUSD ? 'text-green-400' : 'text-orange-400'}`}>
-                  {parseFloat(balance).toFixed(2)} USDC
-                </span>
-              </div>
+            {connected && (
+              <>
+                <div className="flex justify-between items-center text-sm mt-1">
+                  <span className="text-purple-400">USDC Balance:</span>
+                  <span className={`font-mono ${parseFloat(balance) >= config.AUDIT_PRICE_USDC ? 'text-green-400' : 'text-orange-400'}`}>
+                    {balance} USDC
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-sm mt-1">
+                  <span className="text-purple-400">SOL Balance:</span>
+                  <span className="font-mono text-purple-200">
+                    {solBalance} SOL
+                  </span>
+                </div>
+              </>
             )}
           </div>
 
           {/* Wallet Status */}
-          {!isConnected && (
+          {!connected && (
             <Alert className="border-orange-600 bg-orange-900/20">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription className="text-orange-200">
-                Please connect your wallet to proceed with payment
+                Please connect your Solana wallet to proceed with payment
               </AlertDescription>
             </Alert>
           )}
@@ -207,11 +244,11 @@ export function PaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress 
 
           {/* Payment Info */}
           <div className="text-xs text-purple-400 space-y-1">
-            <p>• Payment processed via x402 protocol</p>
+            <p>• Payment processed via x402 protocol on Solana</p>
             <p>• Funds sent directly to service wallet</p>
             <p>• One-time fee per token audit</p>
             {config.IS_TESTNET && (
-              <p className="text-orange-400">⚠️ Testnet mode - Use testnet USDC</p>
+              <p className="text-orange-400">⚠️ Devnet mode - Use devnet USDC</p>
             )}
           </div>
 
@@ -227,7 +264,7 @@ export function PaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress 
             </Button>
             <Button
               onClick={handlePayment}
-              disabled={!isConnected || status === 'paying' || status === 'success' || parseFloat(balance) < priceUSD}
+              disabled={!connected || status === 'paying' || status === 'success' || parseFloat(balance) < config.AUDIT_PRICE_USDC}
               className="flex-1 bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 hover:from-purple-700 hover:via-violet-700 hover:to-purple-800 solana-glow"
             >
               {status === 'checking_balance' && (
@@ -255,11 +292,6 @@ export function PaymentModal({ isOpen, onClose, onPaymentComplete, tokenAddress 
                 </>
               )}
             </Button>
-          </div>
-
-          {/* Demo Mode Notice */}
-          <div className="text-xs text-center text-purple-500 italic">
-            Demo mode: Payment simulation enabled for testing
           </div>
         </CardContent>
       </Card>

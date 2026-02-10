@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -13,14 +13,14 @@ import { AuditResult } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { StatusBadge } from '@/components/status-badge';
 import { RiskScore } from '@/components/risk-score';
-import { PaymentModal } from '@/components/payment-modal';
+import { SolanaPaymentModal } from '@/components/solana-payment-modal';
 import Link from 'next/link';
-import { getX402Config } from '@/lib/x402-config';
+import { getX402SolanaConfig } from '@/lib/x402-solana-config';
 
 export default function Home() {
   const router = useRouter();
-  const { isConnected } = useAccount();
-  const config = getX402Config();
+  const { connected } = useWallet();
+  const config = getX402SolanaConfig();
   
   const [tokenAddress, setTokenAddress] = useState('');
   const [loading, setLoading] = useState(false);
@@ -198,9 +198,9 @@ export default function Home() {
               <Alert className="border-green-600 bg-green-900/20">
                 <DollarSign className="h-4 w-4 text-green-400" />
                 <AlertDescription className="text-green-200">
-                  {isConnected 
-                    ? `Payment of ${config.AUDIT_PRICE} USDC will be requested on Base network`
-                    : 'Connect wallet to pay for audit with USDC on Base'}
+                  {connected 
+                    ? `Payment of ${config.AUDIT_PRICE} USDC will be requested on Solana network`
+                    : 'Connect wallet to pay for audit with USDC on Solana'}
                 </AlertDescription>
               </Alert>
             )}
@@ -208,7 +208,7 @@ export default function Home() {
             <Button 
               type="submit" 
               className="w-full bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 hover:from-purple-700 hover:via-violet-700 hover:to-purple-800 solana-glow transition-all"
-              disabled={loading || (!demoMode && !isConnected)}
+              disabled={loading || (!demoMode && !connected)}
             >
               {loading ? (
                 <>
@@ -232,7 +232,7 @@ export default function Home() {
       </Card>
 
       {/* Payment Modal */}
-      <PaymentModal
+      <SolanaPaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
         onPaymentComplete={handlePaymentComplete}
