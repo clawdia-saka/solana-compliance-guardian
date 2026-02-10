@@ -40,7 +40,7 @@ Projects launching tokens in Japan face:
 
 ## 💳 Pricing
 
-**$0.10 USDC per audit** - Pay with USDC on Base network via x402 protocol
+**$0.01 USDC per audit** - Pay with USDC on Base network via x402 protocol
 
 - ✅ **Connect Wallet** - Any EVM wallet (MetaMask, Coinbase Wallet, etc.)
 - ✅ **Instant Payment** - Powered by x402 HTTP payment protocol
@@ -110,7 +110,7 @@ curl -X POST http://localhost:3000/api/check \
 3. **Enter** a Solana token mint address
 4. **Choose Mode:**
    - **Demo Mode (Free)** - Toggle for testing without payment
-   - **Paid Mode ($0.10 USDC)** - Connect wallet and pay on Base network
+   - **Paid Mode ($0.01 USDC)** - Connect wallet and pay on Base network
 5. **Review** risk score, violations, and recommendations
 
 ### Via API

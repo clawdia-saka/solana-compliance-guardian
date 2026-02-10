@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Compliance Guardian - Token Audit Dashboard",
-  description: "AI-powered token compliance auditing - $0.10 USDC per audit",
+  description: "AI-powered token compliance auditing - $0.01 USDC per audit",
 };
 
 export default function RootLayout({
@@ -34,7 +34,7 @@ export default function RootLayout({
                       <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 via-violet-400 to-purple-300 bg-clip-text text-transparent">
                         Compliance Guardian
                       </h1>
-                      <p className="text-xs text-purple-300">Token Audit Dashboard • $0.10 USDC per audit</p>
+                      <p className="text-xs text-purple-300">Token Audit Dashboard • $0.01 USDC per audit</p>
                     </div>
                   </Link>
                   <div className="flex items-center gap-6">

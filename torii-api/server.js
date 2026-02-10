@@ -117,7 +117,7 @@ app.post('/api/check', (req, res) => {
           error: 'Payment Required',
           message: verification.reason,
           pricing: {
-            amount: '$0.10',
+            amount: '$0.01',
             currency: 'USDC',
             network: 'Base (eip155:8453)',
             payTo: process.env.PAY_TO_ADDRESS || '0xBB6FdC629a153E2bF7629032A3Bf99aec8b48938'

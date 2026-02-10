@@ -150,7 +150,7 @@ export default function Home() {
             Submit Token for Audit
           </CardTitle>
           <CardDescription className="text-purple-300">
-            Enter a Solana token address to begin compliance analysis • {config.AUDIT_PRICE} USDC per audit
+            Enter a Solana token address to begin compliance analysis • {config.AUDIT_PRICE} per audit
           </CardDescription>
         </CardHeader>
         <CardContent>

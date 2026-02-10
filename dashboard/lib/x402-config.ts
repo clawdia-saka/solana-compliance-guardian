@@ -4,8 +4,8 @@
  */
 
 export const X402_CONFIG = {
-  // Payment amount: $0.10 USDC per audit
-  AUDIT_PRICE: '$0.10',
+  // Payment amount: $0.01 USDC per audit
+  AUDIT_PRICE: '$0.01',
   
   // Base network (mainnet)
   NETWORK: 'eip155:8453' as const,
@@ -27,7 +27,7 @@ export const X402_CONFIG = {
 export const X402_TESTNET_CONFIG = {
   ...X402_CONFIG,
   NETWORK: 'eip155:84532' as const, // Base Sepolia
-  AUDIT_PRICE: '$0.01', // Lower price for testing
+  AUDIT_PRICE: '$0.005', // Lower price for testing (half of mainnet)
 };
 
 export const getX402Config = () => {

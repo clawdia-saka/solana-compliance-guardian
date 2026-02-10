@@ -25,7 +25,7 @@
 
 ### Visual Elements
 - [x] ✅ "Connect Wallet" button visible in header
-- [x] ✅ "$0.10 USDC per audit" text in subtitle
+- [x] ✅ "$0.01 USDC per audit" text in subtitle
 - [x] ✅ "Demo Mode (Free)" toggle in submission form
 - [x] ✅ Purple/green Solana theme maintained
 - [x] ✅ x402 branding in footer
@@ -46,12 +46,12 @@ Submit a Solana token address to get instant
 compliance insights and risk assessment.
 
 Enter a Solana token address to begin compliance 
-analysis • $0.10 USDC per audit
+analysis • $0.01 USDC per audit
 
 Demo Mode (Free) [toggle button]
 ```
 
-✅ **Pricing correctly displayed:** "$0.10 USDC per audit"
+✅ **Pricing correctly displayed:** "$0.01 USDC per audit"
 
 ---
 
@@ -114,7 +114,7 @@ Route (app)               Size     First Load JS
 ### Meta Description
 ```html
 <meta name="description" content="AI-powered token compliance 
-auditing - $0.10 USDC per audit" />
+auditing - $0.01 USDC per audit" />
 ```
 
 ✅ **Pricing in meta description**
@@ -142,7 +142,7 @@ auditing - $0.10 USDC per audit" />
 ### Header
 ```
 Compliance Guardian
-Token Audit Dashboard • $0.10 USDC per audit
+Token Audit Dashboard • $0.01 USDC per audit
 [Home] [History] [Connect Wallet]
 ```
 
@@ -150,14 +150,14 @@ Token Audit Dashboard • $0.10 USDC per audit
 ```
 Submit Token for Audit
 Enter a Solana token address to begin compliance 
-analysis • $0.10 USDC per audit
+analysis • $0.01 USDC per audit
 
 [Demo Mode (Free)] [Toggle]
 
 [Input: Token Address]
 
 [Button: Start Free Demo Audit] (demo mode ON)
-[Button: Pay $0.10 & Start Audit] (demo mode OFF)
+[Button: Pay $0.01 & Start Audit] (demo mode OFF)
 ```
 
 ### Footer
@@ -254,11 +254,11 @@ Both warnings are:
 | x402 SDK installed | ✅ | Package.json confirmed |
 | Wallet connect button | ✅ | Visible in header |
 | Payment modal created | ✅ | Component exists |
-| $0.10 USDC pricing | ✅ | Displayed on page |
+| $0.01 USDC pricing | ✅ | Displayed on page |
 | Base network support | ✅ | Config verified |
 | Audit flow updated | ✅ | Demo mode working |
 | Backend verification | ✅ | API code updated |
-| README pricing | ✅ | Updated with $0.10 |
+| README pricing | ✅ | Updated with $0.01 |
 | Deployed to Vercel | ✅ | Live URL confirmed |
 | Theme maintained | ✅ | Purple/green intact |
 | Demo mode available | ✅ | Toggle visible |

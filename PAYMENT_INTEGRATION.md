@@ -7,7 +7,7 @@ Solana Compliance Guardian now features **x402 payment protocol integration**, e
 ## Features
 
 - ✅ **Wallet Connect** - Connect any EVM wallet (MetaMask, Coinbase Wallet, etc.)
-- ✅ **USDC Payments** - Pay $0.10 USDC per audit on Base network
+- ✅ **USDC Payments** - Pay $0.01 USDC per audit on Base network
 - ✅ **x402 Protocol** - Industry-standard HTTP payment protocol
 - ✅ **Demo Mode** - Free testing mode for demonstrations
 - ✅ **Payment Verification** - Backend validation before processing audits
@@ -17,7 +17,7 @@ Solana Compliance Guardian now features **x402 payment protocol integration**, e
 
 | Service | Price | Network | Currency |
 |---------|-------|---------|----------|
-| **Token Audit** | $0.10 | Base (eip155:8453) | USDC |
+| **Token Audit** | $0.01 | Base (eip155:8453) | USDC |
 | **Demo Mode** | FREE | N/A | N/A |
 
 ## How It Works
@@ -29,7 +29,7 @@ Click "Connect Wallet" in the dashboard header to connect your EVM wallet.
 Enter a Solana token mint address in the audit form.
 
 ### 3. Payment Flow
-- **Demo Mode OFF**: Payment modal appears requesting $0.10 USDC
+- **Demo Mode OFF**: Payment modal appears requesting $0.01 USDC
 - **Demo Mode ON**: Skip payment and submit directly (for testing)
 
 ### 4. Payment Verification
@@ -77,7 +77,7 @@ Toggle "Demo Mode" in the UI to:
        │ 3. Show payment modal
        ▼
 ┌─────────────┐
-│   Payment   │  4. Request $0.10 USDC
+│   Payment   │  4. Request $0.01 USDC
 │    Modal    │  5. Sign transaction
 └──────┬──────┘
        │ 6. Payment proof
@@ -108,7 +108,7 @@ function verifyPayment(paymentProof) {
   if (!proof.signature) return { valid: false };
   
   // Verify payment amount and recipient
-  if (proof.amount !== '$0.10') return { valid: false };
+  if (proof.amount !== '$0.01') return { valid: false };
   
   return { valid: true, payer: proof.from };
 }

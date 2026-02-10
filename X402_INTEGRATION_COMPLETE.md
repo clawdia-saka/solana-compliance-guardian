@@ -23,7 +23,7 @@
   - Connect/disconnect functionality
   
 - [x] **Payment Modal** (`components/payment-modal.tsx`)
-  - Shows pricing: $0.10 USDC per audit
+  - Shows pricing: $0.01 USDC per audit
   - Checks USDC balance on Base network
   - Handles payment flow with x402 protocol
   - Displays payment status (pending/success/failed)
@@ -31,7 +31,7 @@
 
 ### 3. Configuration Files ✅
 - [x] **x402 Config** (`lib/x402-config.ts`)
-  - Payment amount: $0.10 USDC
+  - Payment amount: $0.01 USDC
   - Network: Base mainnet (eip155:8453)
   - Testnet support: Base Sepolia (eip155:84532)
   - Receiving wallet: 0xBB6FdC629a153E2bF7629032A3Bf99aec8b48938
@@ -45,7 +45,7 @@
 - [x] Updated `app/layout.tsx`:
   - Added PaymentProvider wrapper
   - Integrated WalletConnectButton in header
-  - Updated subtitle: "Token Audit Dashboard • $0.10 USDC per audit"
+  - Updated subtitle: "Token Audit Dashboard • $0.01 USDC per audit"
   - Added x402 branding in footer
   
 - [x] Updated `app/page.tsx`:
@@ -88,7 +88,7 @@
 ### Payment Flow
 1. **Connect Wallet** → Click button in header
 2. **Enter Token Address** → Solana mint address
-3. **Choose Mode** → Demo (free) or Paid ($0.10 USDC)
+3. **Choose Mode** → Demo (free) or Paid ($0.01 USDC)
 4. **Payment** → Modal requests USDC payment on Base
 5. **Verification** → Backend validates payment proof
 6. **Audit** → Results displayed with risk score
@@ -127,7 +127,7 @@
 - **Toggle:** `NEXT_PUBLIC_X402_TESTNET` environment variable
 
 ### Pricing
-- **Amount:** $0.10 USDC per audit
+- **Amount:** $0.01 USDC per audit
 - **Testnet:** $0.01 USDC (for testing)
 - **Receiving Wallet:** 0xBB6FdC629a153E2bF7629032A3Bf99aec8b48938
 
@@ -171,7 +171,7 @@
 3. Connect MetaMask/Coinbase Wallet
 4. Ensure Demo Mode is OFF
 5. Enter token address
-6. Click "Pay $0.10 & Start Audit"
+6. Click "Pay $0.01 & Start Audit"
 7. Payment modal appears
 8. Approve payment transaction
 9. Wait for confirmation
@@ -213,7 +213,7 @@
 Successfully integrated x402 payment protocol into Solana Compliance Guardian dashboard:
 
 - ✅ Full wallet connection with wagmi
-- ✅ $0.10 USDC payment per audit
+- ✅ $0.01 USDC payment per audit
 - ✅ Base network integration
 - ✅ Payment verification on backend
 - ✅ Demo mode for testing
