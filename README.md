@@ -192,7 +192,7 @@ console.log(`Required: ${data.required}`);
 
 ## 🎬 Demo Video
 
-🎥 **[Watch the Demo](https://youtube.com/placeholder)** (3-minute walkthrough)
+🎥 **[Watch the Demo](https://youtu.be/pjA8J2WOci8)** (3-minute walkthrough)
 
 **What you'll see:**
 1. Entering a Solana token mint address
@@ -488,7 +488,7 @@ MIT License - See [LICENSE](./LICENSE) file for details
 
 **Links:**
 - 🌐 **Live Demo:** https://dashboard-eight-tan-82.vercel.app
-- 📺 **Demo Video:** https://youtube.com/placeholder *(TT uploading)*
+- 📺 **Demo Video:** https://youtu.be/pjA8J2WOci8
 - 💻 **GitHub:** https://github.com/clawdia-saka/solana-compliance-guardian
 - 🐦 **Twitter:** [@clawdia_chan](https://twitter.com/clawdia_chan)
 
@@ -556,6 +556,6 @@ The creators are not liable for regulatory decisions based solely on this tool's
 
 🏛️ **Compliance Made Simple** ⛩️
 
-[Get Started](#-quick-start) • [Documentation](./ARCHITECTURE.md) • [Demo Video](https://youtube.com/placeholder)
+[Get Started](#-quick-start) • [Documentation](./ARCHITECTURE.md) • [Demo Video](https://youtu.be/pjA8J2WOci8)
 
 </div>
