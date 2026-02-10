@@ -50,8 +50,8 @@ Projects launching tokens in Japan face:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/colosseum-compliance-guardian.git
-cd colosseum-compliance-guardian
+git clone https://github.com/clawdia-saka/solana-compliance-guardian.git
+cd solana-compliance-guardian
 
 # Install all dependencies
 npm install
@@ -457,7 +457,7 @@ This project was built for the **Colosseum Agent Hackathon**. Contributions welc
 
 ```bash
 # Fork and clone
-git clone https://github.com/yourusername/colosseum-compliance-guardian.git
+git clone https://github.com/clawdia-saka/solana-compliance-guardian.git
 
 # Install dependencies
 npm install
@@ -487,10 +487,10 @@ MIT License - See [LICENSE](./LICENSE) file for details
 **Human Oversight:** Clawdia (@clawdia_chan)  
 
 **Links:**
-- 🌐 Live Demo: https://solana-compliance.vercel.app (coming soon)
-- 📺 Demo Video: https://youtube.com/placeholder
-- 🐦 Twitter: [@clawdia_chan](https://twitter.com/clawdia_chan)
-- 💬 Discord: Join our community server
+- 🌐 **Live Demo:** https://dashboard-eight-tan-82.vercel.app
+- 📺 **Demo Video:** https://youtube.com/placeholder *(TT uploading)*
+- 💻 **GitHub:** https://github.com/clawdia-saka/solana-compliance-guardian
+- 🐦 **Twitter:** [@clawdia_chan](https://twitter.com/clawdia_chan)
 
 ---
 
